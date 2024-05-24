@@ -46,5 +46,37 @@ public class Functions
         context.Logger.LogInformation("Handling the 'Get' Request");
         List<Personaje> personajes= await this.repo.GetPersonajesAsync();
         return HttpResults.Ok(personajes);
+    }    
+    [LambdaFunction]
+    [RestApi(LambdaHttpMethod.Get, "/find/{id}")]
+    public async Task<IHttpResult> Find(int id, ILambdaContext context)
+    {
+        context.Logger.LogInformation("Handling the 'Get' Request");
+        Personaje personaje= await this.repo.FindPersonajeAsync(id);
+        return HttpResults.Ok(personaje);
+    }    
+    [LambdaFunction]
+    [RestApi(LambdaHttpMethod.Post, "/post")]
+    public async Task<IHttpResult> Post([FromBody] Personaje personaje, ILambdaContext context)
+    {
+        context.Logger.LogInformation("Handling the 'POST' Request");
+        Personaje personajeNew = await this.repo.CreatePersonajeAsync(personaje.Nombre, personaje.Imagen);
+        return HttpResults.Ok(personajeNew);
+    }    
+    [LambdaFunction]
+    [RestApi(LambdaHttpMethod.Put, "/put")]
+    public async Task<IHttpResult> Put([FromBody] Personaje personaje, ILambdaContext context)
+    {
+        context.Logger.LogInformation("Handling the 'Put' Request");
+        await this.repo.UpdatePersonajeAsync(personaje.IdPersonaje, personaje.Nombre, personaje.Imagen);
+        return HttpResults.Ok("Todo OK Jose luis");
+    }    
+    [LambdaFunction]
+    [RestApi(LambdaHttpMethod.Delete, "/delete/{id}")]
+    public async Task<IHttpResult> Delete(int id, ILambdaContext context)
+    {
+        context.Logger.LogInformation("Handling the 'Put' Request");
+        await this.repo.DeletePersonajeAsync(id);
+        return HttpResults.Ok("Todo OK Jose luis");
     }
 }

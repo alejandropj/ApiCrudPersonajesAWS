@@ -2,6 +2,7 @@ using Amazon.Lambda.Annotations;
 using ApiCrudPersonajesAWS.Data;
 using ApiCrudPersonajesAWS.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ApiCrudPersonajesAWS;
@@ -19,8 +20,16 @@ public class Startup
     /// </summary>
     public void ConfigureServices(IServiceCollection services)
     {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", true);
+
+        var config = builder.Build();
+        services.AddSingleton<IConfiguration>(config);
         services.AddTransient<RepositoryPersonajes>();
-        string connectionString = "server=awsmysqlapj.chemss4qglet.us-east-1.rds.amazonaws.com;port=3306;user id=adminsql;password=Admin123;database=television";
+
+        string connectionString = 
+            config.GetConnectionString("MySql");
         services.AddDbContext<PersonajesContext>
             (options => options.UseMySql(connectionString,
             ServerVersion.AutoDetect(connectionString)));
