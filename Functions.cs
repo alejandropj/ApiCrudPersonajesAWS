@@ -23,6 +23,16 @@ public class Functions
         this.repo = repo;
     }
 
+    public APIGatewayProxyResponse Find(APIGatewayProxyRequest request, ILambdaContext context)
+    {
+        context.Logger.LogInformation("Estoy en Find");
+        var response = new APIGatewayProxyResponse
+        {
+            StatusCode = 200,
+            Body = "Soy la respuesta a todo"
+        };
+        return response;
+    }
 
     /// <summary>
     /// A Lambda function to respond to HTTP Get methods from API Gateway
@@ -47,7 +57,7 @@ public class Functions
         List<Personaje> personajes= await this.repo.GetPersonajesAsync();
         return HttpResults.Ok(personajes);
     }    
-    [LambdaFunction]
+/*    [LambdaFunction]
     [RestApi(LambdaHttpMethod.Get, "/find/{id}")]
     public async Task<IHttpResult> Find(int id, ILambdaContext context)
     {
@@ -78,5 +88,5 @@ public class Functions
         context.Logger.LogInformation("Handling the 'Put' Request");
         await this.repo.DeletePersonajeAsync(id);
         return HttpResults.Ok("Todo OK Jose luis");
-    }
+    }*/
 }
